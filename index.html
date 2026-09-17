@@ -1,52 +1,455 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CAR24.KE — Kenya Vehicle Marketplace</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAR24.KE — Kenya's Vehicle Marketplace</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6f8;color:#17212b}button,input,select,textarea{font:inherit}header{background:#101417;color:#fff;padding:14px 4%;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:10}.logo{font-size:29px;font-weight:900}.logo span{color:#16b85a}nav{margin-left:auto;display:flex;gap:10px}nav button{background:none;border:0;color:#fff;font-weight:800;cursor:pointer}.wrap{max-width:1160px;margin:auto;padding:24px 18px}.hero{background:linear-gradient(90deg,rgba(8,18,23,.92),rgba(8,18,23,.48)),url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1800&q=85') center/cover;color:#fff;padding:72px 18px 64px;min-height:430px;display:flex;align-items:center}.heroIn{max-width:1100px;margin:auto;text-align:center}.hero h1{font-size:46px;margin:0 0 8px;letter-spacing:-1px}.hero p{color:#eef2f3;font-size:17px}.search{background:#fff;padding:12px;border-radius:12px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;text-align:left}.search input,.search select,.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid #d3dde1;border-radius:6px;background:#fff}.green{background:#12aa52!important;color:#fff!important;border:0!important;border-radius:6px;padding:12px 19px;font-weight:800;cursor:pointer}.section{margin-top:28px}.sectionTop{display:flex;justify-content:space-between;align-items:center}.sectionTop h2{margin:0}.sectionTop button{border:0;background:none;color:#099a49;font-weight:bold}.cars{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.car{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 5px 22px #00000014;transition:.2s}.car:hover{transform:translateY(-3px);box-shadow:0 10px 28px #0000001c}.pic{height:190px;background:#e8edef;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover;display:block}.cardTag{position:absolute;left:10px;top:10px;background:#fff;color:#17212b;padding:6px 9px;border-radius:6px;font-size:10px;font-weight:900}.picWrap{position:relative;height:190px}.body{padding:13px}.price{color:#099f4b;font-weight:900;font-size:18px}.meta{font-size:11px;color:#6e7c84;margin-top:5px;line-height:1.5}.badge{display:inline-block;background:#eaf8f0;color:#078d42;padding:4px 6px;border-radius:4px;font-size:9px;font-weight:bold;margin-top:6px;margin-right:3px}.page{display:none}.page.active{display:block}.panel{background:#fff;border-radius:10px;padding:22px;box-shadow:0 2px 10px #0001;margin-bottom:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}.field label{display:block;font-size:11px;font-weight:800;margin-bottom:5px}.req{color:#d52d39}.status{background:#eefaf3;border-left:4px solid #12aa52;padding:13px;font-size:12px}.notice{padding:13px;border-radius:7px;background:#eefaf3;font-size:12px}.later{background:#fff8e5;border:1px solid #efd58a;color:#795900;padding:13px;border-radius:7px;font-size:12px}.actions{display:flex;justify-content:space-between;gap:10px}.actions button{padding:12px 20px;border-radius:6px;border:1px solid #cbd7db;background:#fff;font-weight:bold;cursor:pointer}.result{display:grid;grid-template-columns:190px 1fr auto;gap:14px;background:#fff;border-radius:9px;padding:10px;margin-bottom:10px;box-shadow:0 2px 9px #0001}.result .pic{height:150px;border-radius:8px}.result .picWrap{height:150px}.result h3{margin:3px 0 6px}.footer{background:#101417;color:#aaa;padding:32px 5%;margin-top:30px}.footer b{color:#fff;font-size:20px}.authbox{max-width:500px;margin:30px auto}.small{font-size:12px;color:#65737a}.hidden{display:none!important}.toast{position:fixed;right:16px;bottom:16px;background:#101417;color:#fff;padding:13px 16px;border-radius:8px;z-index:50;box-shadow:0 4px 18px #0003}.empty{background:#fff;border-radius:9px;padding:30px;text-align:center;color:#718087}@media(max-width:850px){nav{display:none}.search{grid-template-columns:1fr 1fr}.cars{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.search,.grid{grid-template-columns:1fr}.full{grid-column:auto}.result{grid-template-columns:1fr}.result .pic{height:180px}.result .picWrap{height:180px}.hero{padding:54px 14px 48px;min-height:470px}.hero h1{font-size:31px}.actions{flex-direction:column}.cars{grid-template-columns:1fr 1fr}.car .picWrap,.car .pic{height:150px}}
+*{box-sizing:border-box}
+body{margin:0;background:#f2f3f5;color:#20252b;font-family:Arial,Helvetica,sans-serif}
+a{text-decoration:none;color:inherit}
+.top{background:#fff;border-bottom:1px solid #ddd}
+.topin{max-width:1180px;margin:auto;height:64px;display:flex;align-items:center;gap:30px;padding:0 18px}
+.logo{font-size:30px;font-weight:900;letter-spacing:-1px}
+.logo span{color:#72ad18}
+.nav{display:flex;gap:24px;font-size:15px;font-weight:600;color:#454b51}
+.nav a:hover{color:#72ad18}
+.account{margin-left:auto;display:flex;gap:12px;align-items:center}
+.btn{border:0;border-radius:4px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:14px}
+.btn.green{background:#78b51b;color:#fff}
+.btn.dark{background:#273038;color:#fff}
+.btn.white{background:#fff;border:1px solid #cfd3d7}
+.main{max-width:1180px;margin:auto;padding:18px}
+.searchbox{background:#fff;border:1px solid #d9dde0;border-radius:3px;box-shadow:0 1px 3px #00000012}
+.searchhead{background:#30383f;color:#fff;padding:15px 18px;font-size:20px;font-weight:700}
+.searchbody{padding:16px}
+.tabs{display:flex;gap:2px;margin-bottom:15px;overflow:auto}
+.tab{padding:12px 18px;background:#e9ecef;font-weight:700;white-space:nowrap;cursor:pointer}
+.tab.active{background:#78b51b;color:white}
+.filters{display:grid;grid-template-columns:2fr 1.3fr 1.3fr 1.2fr 1.2fr auto;gap:9px}
+select,input{width:100%;height:43px;border:1px solid #cbd0d4;border-radius:3px;background:#fff;padding:0 11px;font-size:15px;color:#333}
+.searchbtn{height:43px;padding:0 25px;background:#78b51b;color:#fff;border:0;border-radius:3px;font-size:15px;font-weight:800}
+.quick{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+.quick span{background:#f1f3f4;border:1px solid #ddd;padding:8px 13px;border-radius:3px;font-size:13px;cursor:pointer}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:18px;margin-top:18px}
+.content,.sidebox{background:#fff;border:1px solid #d9dde0}
+.sectiontitle{padding:16px 18px;border-bottom:1px solid #ddd;font-size:21px;font-weight:800}
+.banner{margin:18px 0;background:#dfeef8;border:1px solid #ccdce7;min-height:110px;display:flex;align-items:center;justify-content:space-between;padding:20px 30px;overflow:hidden}
+.banner strong{font-size:25px}
+.banner small{display:block;margin-top:8px;color:#56616b}
+.banner .carline{font-size:65px;opacity:.18}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px}
+.card{border:1px solid #d4d8dc;background:#fff;cursor:pointer;transition:.15s}
+.card:hover{box-shadow:0 2px 10px #0002;transform:translateY(-1px)}
+.pic{height:170px;background:#ddd center/cover no-repeat}
+.info{padding:11px}
+.title{font-size:17px;font-weight:700}
+.price{font-size:19px;font-weight:800;margin-top:7px}
+.meta{color:#68717a;font-size:13px;margin-top:7px}
+.badge{display:inline-block;background:#72ad18;color:#fff;padding:4px 7px;font-size:11px;font-weight:700;margin-top:8px}
+.sidebox{margin-bottom:18px}
+.sidebody{padding:15px}
+.sidebody h3{margin:0 0 12px;font-size:17px}
+.sidebody p{color:#68717a;line-height:1.5;font-size:14px}
+.sideitem{padding:11px 0;border-bottom:1px solid #eee;font-weight:600}
+.sell{background:#78b51b;color:#fff;text-align:center;padding:19px}
+.sell strong{display:block;font-size:21px;margin-bottom:8px}
+.footer{background:#293138;color:#cbd0d4;margin-top:30px}
+.footerin{max-width:1180px;margin:auto;padding:30px 18px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}
+.footer h3{color:#fff;margin-top:0}
+.footer p,.footer a{font-size:14px;line-height:1.8;color:#cbd0d4}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modalbox{background:#fff;width:min(500px,100%);border-radius:5px;padding:25px}
+.modalbox h2{margin-top:0}
+.close{float:right;font-size:24px;cursor:pointer}
+.formrow{margin-bottom:11px}
+.formrow label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}
+@media(max-width:900px){
+.nav{display:none}
+.filters{grid-template-columns:1fr 1fr}
+.layout{grid-template-columns:1fr}
+.grid{grid-template-columns:repeat(2,1fr)}
+.footerin{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+.topin{height:58px;padding:0 12px}
+.logo{font-size:25px}
+.account .white{display:none}
+.main{padding:10px}
+.searchhead{font-size:17px}
+.filters{grid-template-columns:1fr}
+.searchbtn{width:100%}
+.layout{margin-top:12px}
+.grid{grid-template-columns:1fr;padding:9px}
+.pic{height:205px}
+.banner{min-height:100px;padding:15px}
+.banner strong{font-size:19px}
+.banner .carline{display:none}
+.footerin{grid-template-columns:1fr}
+}
 </style>
 </head>
-<body>
-<header><div class="logo">CAR<span>24.KE</span></div><nav><button onclick="showPage('home')">HOME</button><button onclick="showPage('browse')">VEHICLES</button><button onclick="showPage('parts')">SPARE PARTS</button><button onclick="showPage('sell')">SELL</button><button onclick="showPage('account')">ACCOUNT</button></nav></header>
 
-<section id="home" class="page active">
-<div class="hero"><div class="heroIn"><h1>Kenya's Vehicle Marketplace</h1><p>Cars, SUVs, trucks, motorcycles, boats and heavy machinery.</p><div class="search"><input id="homeQ" placeholder="Search make, model or title"><select id="homeMake"><option value="">Any make</option></select><select id="homeLocation"><option value="">Any location</option><option>Nairobi</option><option>Mombasa</option><option>Kiambu</option><option>Kisumu</option><option>Nakuru</option><option>Uasin Gishu</option><option>Kwale</option><option>Kilifi</option><option>Other</option></select><select id="homeCategory"><option value="">Any category</option><option>Cars</option><option>Motorcycles</option><option>Boats</option><option>Heavy Machinery</option><option>Trucks</option><option>Other</option></select><button class="green" onclick="doSearch()">SEARCH</button></div></div></div>
-<div class="wrap"><div class="section"><div class="sectionTop"><h2>Latest vehicles</h2><button onclick="showPage('browse')">View all →</button></div><div id="latest" class="cars" style="margin-top:14px"></div></div><div class="section"><div class="panel"><h2>List your vehicle for FREE</h2><p>Reach buyers across Kenya. No listing fee.</p><button class="green" onclick="showPage('sell')">POST FREE AD</button></div></div></div>
+<body>
+
+<header class="top">
+<div class="topin">
+<div class="logo">CAR<span>24.KE</span></div>
+<nav class="nav">
+<a href="#" onclick="showHome()">Cars</a>
+<a href="#" onclick="showCategory('Motorcycles')">Motorcycles</a>
+<a href="#" onclick="showCategory('Trucks')">Trucks</a>
+<a href="#" onclick="showCategory('Boats')">Boats</a>
+<a href="#" onclick="showCategory('Equipment')">Equipment</a>
+<a href="#" onclick="showParts()">Spare parts</a>
+</nav>
+<div class="account">
+<button class="btn white" onclick="openModal('login')">Log in</button>
+<button class="btn green" onclick="openModal('sell')">SELL YOUR VEHICLE</button>
+</div>
+</div>
+</header>
+
+<main class="main">
+
+<section class="searchbox">
+<div class="searchhead">Find your next vehicle in Kenya</div>
+<div class="searchbody">
+
+<div class="tabs">
+<div class="tab active" onclick="setTab(this,'Cars')">Cars</div>
+<div class="tab" onclick="setTab(this,'Commercial')">Commercial</div>
+<div class="tab" onclick="setTab(this,'Motorcycles')">Motorcycles</div>
+<div class="tab" onclick="setTab(this,'Boats')">Boats</div>
+<div class="tab" onclick="setTab(this,'Equipment')">Equipment</div>
+</div>
+
+<div class="filters">
+<input id="q" placeholder="Make, model or keyword">
+<select id="make">
+<option value="">Any make</option>
+<option>Toyota</option>
+<option>Mercedes-Benz</option>
+<option>BMW</option>
+<option>Volkswagen</option>
+<option>Volvo</option>
+<option>Nissan</option>
+<option>Ford</option>
+<option>Land Rover</option>
+</select>
+<select id="location">
+<option value="">All Kenya</option>
+<option>Nairobi</option>
+<option>Mombasa</option>
+<option>Kwale</option>
+<option>Kilifi</option>
+<option>Kisumu</option>
+<option>Nakuru</option>
+<option>Machakos</option>
+</select>
+<input id="min" type="number" placeholder="Price from">
+<input id="max" type="number" placeholder="Price to">
+<button class="searchbtn" onclick="searchCars()">SEARCH</button>
+</div>
+
+<div class="quick">
+<span onclick="quick('Toyota')">Toyota</span>
+<span onclick="quick('Mercedes-Benz')">Mercedes-Benz</span>
+<span onclick="quick('BMW')">BMW</span>
+<span onclick="quick('SUV')">SUV</span>
+<span onclick="quick('Pickup')">Pickups</span>
+<span onclick="quick('Diesel')">Diesel</span>
+<span onclick="quick('Automatic')">Automatic</span>
+</div>
+
+</div>
 </section>
 
-<section id="browse" class="page"><div class="wrap"><div class="panel"><h2>Vehicles</h2><div class="search" style="box-shadow:none;padding:0"><input id="q" placeholder="Search make, model or title" oninput="loadVehicles()"><select id="make" onchange="loadVehicles()"><option value="">Any make</option></select><select id="location" onchange="loadVehicles()"><option value="">Any location</option><option>Nairobi</option><option>Mombasa</option><option>Kiambu</option><option>Kisumu</option><option>Nakuru</option><option>Uasin Gishu</option><option>Kwale</option><option>Kilifi</option><option>Other</option></select><select id="category" onchange="loadVehicles()"><option value="">Any category</option><option>Cars</option><option>Motorcycles</option><option>Boats</option><option>Heavy Machinery</option><option>Trucks</option><option>Other</option></select><button class="green" onclick="loadVehicles()">REFRESH</button></div></div><div id="results"></div></div></section>
+<div class="banner">
+<div>
+<strong>Kenya's marketplace for vehicles</strong>
+<small>Buy and sell cars, motorcycles, trucks, boats and equipment.</small>
+</div>
+<div class="carline">🚘</div>
+</div>
 
-<section id="sell" class="page"><div class="wrap"><div class="panel"><h2>Post a vehicle</h2><div id="sellStatus" class="notice">Sign in or create an account to publish a listing.</div><div class="grid" style="margin-top:16px"><div class="field"><label>CATEGORY *</label><select id="f_category"><option>Cars</option><option>Motorcycles</option><option>Boats</option><option>Heavy Machinery</option><option>Trucks</option><option>Other</option></select></div><div class="field"><label>MAKE *</label><input id="f_make" placeholder="Toyota"></div><div class="field"><label>MODEL *</label><input id="f_model" placeholder="Land Cruiser"></div><div class="field"><label>YEAR *</label><input id="f_year" type="number" placeholder="2020"></div><div class="field"><label>PRICE (KES) *</label><input id="f_price" type="number" placeholder="2500000"></div><div class="field"><label>MILEAGE (KM)</label><input id="f_mileage" type="number" placeholder="85000"></div><div class="field"><label>FUEL</label><select id="f_fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option></select></div><div class="field"><label>TRANSMISSION</label><select id="f_trans"><option>Automatic</option><option>Manual</option></select></div><div class="field"><label>BODY TYPE</label><input id="f_body" placeholder="SUV"></div><div class="field"><label>LOCATION *</label><input id="f_location" placeholder="Mombasa"></div><div class="field"><label>SELLER NAME *</label><input id="f_name"></div><div class="field"><label>SELLER PHONE *</label><input id="f_phone" placeholder="+254..."></div><div class="field"><label>SELLER EMAIL</label><input id="f_email" type="email"></div><div class="field"><label>VIN / CHASSIS</label><input id="f_vin"></div><div class="field"><label>CUSTOMS CLEARED?</label><select id="f_customs"><option value="false">No / Unknown</option><option value="true">Yes</option></select></div><div class="field"><label>TECH INSPECTION DONE?</label><select id="f_inspection"><option value="false">No</option><option value="true">Yes</option></select></div><div class="field"><label>INSPECTION DATE</label><input id="f_inspection_date" type="date"></div><div class="field full"><label>DESCRIPTION</label><textarea id="f_desc" placeholder="Describe the vehicle, condition and important details..."></textarea></div></div><div class="actions" style="margin-top:18px"><button onclick="showPage('home')">CANCEL</button><button class="green" onclick="publishVehicle()">PUBLISH FREE AD</button></div></div></div></section>
+<div class="layout">
 
-<section id="parts" class="page"><div class="wrap"><div class="panel"><h2>Spare Parts</h2><p class="small">Search parts already stored in CAR24.KE.</p><input id="partsQ" oninput="loadParts()" placeholder="Search part, brand or part number"></div><div id="partsResults"></div></div></section>
+<section class="content">
+<div class="sectiontitle">
+Latest vehicles
+<button class="btn green" style="float:right;padding:8px 13px" onclick="showAll()">VIEW ALL</button>
+</div>
 
-<section id="account" class="page"><div class="wrap"><div class="panel authbox"><h2>CAR24.KE Account</h2><div id="authState" class="notice">Not signed in.</div><div id="authForm"><div class="field"><label>EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com"></div><div class="field" style="margin-top:10px"><label>PASSWORD</label><input id="authPassword" type="password" placeholder="Minimum 6 characters"></div><div class="actions" style="margin-top:15px"><button class="green" onclick="signUp()">CREATE ACCOUNT</button><button onclick="signIn()">SIGN IN</button></div><p class="small">If email confirmation is enabled in Supabase, check your email after registration.</p></div><button id="logoutBtn" class="green hidden" onclick="signOut()">SIGN OUT</button></div></div></section>
+<div class="grid" id="vehicleGrid"></div>
+</section>
 
-<div id="toast" class="toast hidden"></div><footer class="footer"><b>CAR24.KE</b><p>Kenya vehicle marketplace • Cars • Motorcycles • Boats • Trucks • Heavy Machinery • Spare Parts</p></footer>
+<aside>
+
+<div class="sidebox sell">
+<strong>Sell your vehicle</strong>
+Free listing for sellers in Kenya
+<br><br>
+<button class="btn white" onclick="openModal('sell')">POST FOR FREE</button>
+</div>
+
+<div class="sidebox">
+<div class="sectiontitle" style="font-size:17px">Browse by location</div>
+<div class="sidebody">
+<div class="sideitem" onclick="quick('Nairobi')">Nairobi</div>
+<div class="sideitem" onclick="quick('Mombasa')">Mombasa</div>
+<div class="sideitem" onclick="quick('Kwale')">Kwale</div>
+<div class="sideitem" onclick="quick('Kilifi')">Kilifi</div>
+<div class="sideitem" onclick="quick('Nakuru')">Nakuru</div>
+<div class="sideitem" onclick="quick('Kisumu')">Kisumu</div>
+</div>
+</div>
+
+<div class="sidebox">
+<div class="sectiontitle" style="font-size:17px">Spare parts</div>
+<div class="sidebody">
+<h3>Looking for a part?</h3>
+<p>Send an inquiry to sellers across Kenya.</p>
+<button class="btn dark" onclick="showParts()">SEARCH PARTS</button>
+</div>
+</div>
+
+</aside>
+</div>
+
+</main>
+
+<footer class="footer">
+<div class="footerin">
+<div>
+<h3>CAR24.KE</h3>
+<p>Kenya's online marketplace for vehicles, equipment and spare parts.</p>
+</div>
+<div>
+<h3>Vehicles</h3>
+<a href="#">Cars</a><br>
+<a href="#">Motorcycles</a><br>
+<a href="#">Trucks</a><br>
+<a href="#">Boats</a>
+</div>
+<div>
+<h3>For sellers</h3>
+<a href="#">Sell vehicle</a><br>
+<a href="#">Seller account</a><br>
+<a href="#">Spare parts</a>
+</div>
+<div>
+<h3>CAR24.KE</h3>
+<a href="#">About</a><br>
+<a href="#">Contact</a><br>
+<a href="#">Terms</a>
+</div>
+</div>
+</footer>
+
+<div class="modal" id="modal">
+<div class="modalbox">
+<span class="close" onclick="closeModal()">×</span>
+<div id="modalContent"></div>
+</div>
+</div>
+
 <script>
-const SUPABASE_URL='https://becssimayyghkrgxzxmf.supabase.co';
-const SUPABASE_KEY='YOUR_SUPABASE_PUBLISHABLE_KEY';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
-function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),3000)}
-function showPage(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);if(id==='browse')loadVehicles();if(id==='parts')loadParts();if(id==='account')refreshAuth();}
-function money(v){return new Intl.NumberFormat('en-KE',{style:'currency',currency:'KES',maximumFractionDigits:0}).format(v||0)}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])}
-function carImg(v){const imgs=['https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80'];return imgs[(Number(v.id)||0)%imgs.length]}
-function card(v){return `<div class="car"><div class="picWrap"><div class="pic"><img src="${carImg(v)}" alt="${esc(v.title)}" loading="lazy"></div><span class="cardTag">${esc(v.location||'Kenya')}</span></div><div class="body"><div class="price">${money(v.price)}</div><h3 style="margin:6px 0">${esc(v.title)}</h3><div class="meta">${esc(v.year||'')} ${esc(v.make||'')} ${esc(v.model||'')}<br>${esc(v.mileage||'')} km • ${esc(v.location||'')}</div>${v.customs_paid?'<span class="badge">CUSTOMS CLEARED</span>':''}${v.inspection_done?'<span class="badge">INSPECTED</span>':''}</div></div>`}
-async function loadMakes(){const {data}=await sb.from('vehicles').select('make').not('make','is',null);const makes=[...new Set((data||[]).map(x=>x.make).filter(Boolean))].sort();['homeMake','make'].forEach(id=>{const el=$(id);const old=el.value;el.innerHTML='<option value="">Any make</option>'+makes.map(m=>`<option>${esc(m)}</option>`).join('');el.value=old})}
-async function loadLatest(){const {data,error}=await sb.from('vehicles').select('*').eq('status','active').order('created_at',{ascending:false}).limit(8);$('latest').innerHTML=error?`<div class="empty">Could not load vehicles.</div>`:(data&&data.length?data.map(card).join(''):'<div class="empty">No vehicles yet. Be the first to post one.</div>')}
-async function loadVehicles(){let q=$('q')?.value?.trim()||'';let make=$('make')?.value||'';let loc=$('location')?.value||'';let cat=$('category')?.value||'';let query=sb.from('vehicles').select('*').eq('status','active').order('created_at',{ascending:false});if(make)query=query.eq('make',make);if(loc)query=query.ilike('location',`%${loc}%`);if(cat)query=query.ilike('title',`%${cat}%`);if(q)query=query.or(`title.ilike.%${q}%,make.ilike.%${q}%,model.ilike.%${q}%`);const {data,error}=await query.limit(100);if(error){$('results').innerHTML='<div class="empty">Could not load vehicles.</div>';return}$('results').innerHTML=data?.length?data.map(v=>`<div class="result"><div class="picWrap"><div class="pic"><img src="${carImg(v)}" alt="${esc(v.title)}" loading="lazy"></div></div><div><h3>${esc(v.title)}</h3><div class="price">${money(v.price)}</div><div class="meta">${esc(v.year||'')} • ${esc(v.make||'')} ${esc(v.model||'')} • ${esc(v.mileage||'')} km • ${esc(v.location||'')}<br>${esc(v.fuel_type||'')} • ${esc(v.transmission||'')}</div></div><div><button class="green" onclick="alert('Seller: ${esc(v.seller_phone||'')}')">CONTACT</button></div></div>`).join(''):'<div class="empty">No matching vehicles.</div>'}
-function doSearch(){$('q').value=$('homeQ').value;$('make').value=$('homeMake').value;$('location').value=$('homeLocation').value;$('category').value=$('homeCategory').value;showPage('browse');loadVehicles()}
-async function publishVehicle(){const {data:{user}}=await sb.auth.getUser();if(!user){toast('Please create an account or sign in first.');showPage('account');return}const title=`${$('f_make').value.trim()} ${$('f_model').value.trim()}`.trim();const required=[title,$('f_year').value,$('f_price').value,$('f_location').value.trim(),$('f_name').value.trim(),$('f_phone').value.trim()];if(required.some(x=>!x)){toast('Please fill all required fields.');return}const row={title,description:$('f_desc').value||null,price:Number($('f_price').value),currency:'KES',make:$('f_make').value.trim()||null,model:$('f_model').value.trim()||null,year:Number($('f_year').value)||null,mileage:Number($('f_mileage').value)||null,fuel_type:$('f_fuel').value,transmission:$('f_trans').value,body_type:$('f_body').value.trim()||null,location:$('f_location').value.trim(),seller_name:$('f_name').value.trim(),seller_phone:$('f_phone').value.trim(),seller_email:$('f_email').value.trim()||user.email,customs_paid:$('f_customs').value==='true',inspection_done:$('f_inspection').value==='true',inspection_date:$('f_inspection_date').value||null,vin:$('f_vin').value.trim()||null,status:'active'};const {error}=await sb.from('vehicles').insert(row);if(error){toast('Publish failed: '+error.message);return}toast('Your vehicle has been published!');document.querySelectorAll('#sell input,#sell textarea').forEach(x=>x.value='');loadLatest();showPage('browse')}
-async function loadParts(){let q=$('partsQ')?.value?.trim()||'';let query=sb.from('spare_parts').select('*').eq('status','active').order('created_at',{ascending:false});if(q)query=query.or(`title.ilike.%${q}%,brand.ilike.%${q}%,part_number.ilike.%${q}%`);const {data,error}=await query.limit(100);$('partsResults').innerHTML=error?'<div class="empty">Could not load spare parts.</div>':data?.length?data.map(p=>`<div class="result"><div class="pic">🔧</div><div><h3>${esc(p.title)}</h3><div class="price">${money(p.price)}</div><div class="meta">${esc(p.brand||'')} ${esc(p.part_number||'')}<br>${esc(p.location||'')} • ${esc(p.seller_name||'')}</div></div><div><button class="green" onclick="alert('Seller: ${esc(p.seller_phone||'')}')">CONTACT</button></div></div>`).join(''):'<div class="empty">No spare parts found.</div>'}
-async function signUp(){const email=$('authEmail').value.trim(),password=$('authPassword').value;if(!email||password.length<6){toast('Enter email and a password of at least 6 characters.');return}const {data,error}=await sb.auth.signUp({email,password});if(error){toast(error.message);return}if(data.user){await sb.from('users').upsert({id:data.user.id,email:data.user.email,account_type:'private'}, {onConflict:'id'});toast(data.session?'Account created.':'Check your email to confirm your account.')}}
-async function signIn(){const email=$('authEmail').value.trim(),password=$('authPassword').value;const {error}=await sb.auth.signInWithPassword({email,password});if(error){toast(error.message);return}toast('Signed in.');refreshAuth()}
-async function signOut(){await sb.auth.signOut();toast('Signed out.');refreshAuth()}
-async function refreshAuth(){const {data:{user}}=await sb.auth.getUser();$('authState').textContent=user?`Signed in as ${user.email}`:'Not signed in.';$('authForm').classList.toggle('hidden',!!user);$('logoutBtn').classList.toggle('hidden',!user);$('sellStatus').textContent=user?'You are signed in. Your ad will be published directly to CAR24.KE.':'Sign in or create an account to publish a listing.'}
-sb.auth.onAuthStateChange(()=>refreshAuth());
-loadMakes();loadLatest();refreshAuth();
+const cars=[
+{
+title:"Toyota Land Cruiser Prado",
+price:5850000,
+year:2021,
+km:"72,000 km",
+fuel:"Diesel",
+location:"Nairobi",
+img:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=900&q=80"
+},
+{
+title:"BMW X5 xDrive",
+price:7200000,
+year:2020,
+km:"61,500 km",
+fuel:"Petrol",
+location:"Mombasa",
+img:"https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=80"
+},
+{
+title:"Mercedes-Benz GLE",
+price:8950000,
+year:2022,
+km:"38,200 km",
+fuel:"Diesel",
+location:"Nairobi",
+img:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=900&q=80"
+},
+{
+title:"Toyota Hilux Double Cab",
+price:4650000,
+year:2019,
+km:"94,000 km",
+fuel:"Diesel",
+location:"Mombasa",
+img:"https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=900&q=80"
+},
+{
+title:"Volvo XC90",
+price:6490000,
+year:2021,
+km:"57,000 km",
+fuel:"Diesel",
+location:"Nairobi",
+img:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=900&q=80"
+},
+{
+title:"Nissan X-Trail",
+price:2850000,
+year:2018,
+km:"86,000 km",
+fuel:"Petrol",
+location:"Kwale",
+img:"https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=900&q=80"
+}
+];
+
+let currentTab="Cars";
+
+function render(list=cars){
+const grid=document.getElementById("vehicleGrid");
+grid.innerHTML="";
+if(!list.length){
+grid.innerHTML='<div style="grid-column:1/-1;padding:35px;text-align:center;color:#68717a">No vehicles found. Try different search criteria.</div>';
+return;
+}
+list.forEach(v=>{
+grid.innerHTML+=`
+<div class="card" onclick="vehicle('${v.title}')">
+<div class="pic" style="background-image:url('${v.img}')"></div>
+<div class="info">
+<div class="title">${v.title}</div>
+<div class="price">KES ${v.price.toLocaleString()}</div>
+<div class="meta">${v.year} · ${v.km} · ${v.fuel}</div>
+<div class="meta">${v.location}, Kenya</div>
+<span class="badge">REGISTERED</span>
+</div>
+</div>`;
+});
+}
+
+function searchCars(){
+const q=document.getElementById("q").value.toLowerCase();
+const make=document.getElementById("make").value.toLowerCase();
+const loc=document.getElementById("location").value.toLowerCase();
+const min=Number(document.getElementById("min").value)||0;
+const max=Number(document.getElementById("max").value)||Infinity;
+
+const result=cars.filter(v=>{
+return (!q||v.title.toLowerCase().includes(q)||v.fuel.toLowerCase().includes(q))
+&&(!make||v.title.toLowerCase().includes(make))
+&&(!loc||v.location.toLowerCase()==loc)
+&&v.price>=min&&v.price<=max;
+});
+render(result);
+window.scrollTo({top:350,behavior:"smooth"});
+}
+
+function quick(value){
+document.getElementById("q").value=value;
+searchCars();
+}
+
+function setTab(el,type){
+document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+el.classList.add("active");
+currentTab=type;
+document.getElementById("q").value="";
+render(cars);
+}
+
+function showCategory(type){
+document.getElementById("q").value=type;
+searchCars();
+}
+
+function showAll(){
+document.getElementById("q").value="";
+document.getElementById("make").value="";
+document.getElementById("location").value="";
+document.getElementById("min").value="";
+document.getElementById("max").value="";
+render(cars);
+}
+
+function showHome(){
+showAll();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function showParts(){
+openModal("parts");
+}
+
+function vehicle(name){
+const v=cars.find(x=>x.title===name);
+openCustom(`
+<h2>${v.title}</h2>
+<img src="${v.img}" style="width:100%;height:220px;object-fit:cover">
+<h2>KES ${v.price.toLocaleString()}</h2>
+<p><b>${v.year}</b> · ${v.km} · ${v.fuel}</p>
+<p>${v.location}, Kenya</p>
+<button class="btn green" onclick="openModal('contact')">CONTACT SELLER</button>
+`);
+}
+
+function openModal(type){
+let html="";
+if(type==="login"){
+html=`<h2>My CAR24.KE account</h2>
+<div class="formrow"><label>Email</label><input placeholder="Email address"></div>
+<div class="formrow"><label>Password</label><input type="password" placeholder="Password"></div>
+<button class="btn green" style="width:100%">LOG IN</button>
+<p style="color:#68717a">New seller? You can create an account when posting a vehicle.</p>`;
+}
+if(type==="sell"){
+html=`<h2>Sell your vehicle</h2>
+<p>Post your vehicle for free on CAR24.KE.</p>
+<div class="formrow"><label>Vehicle title</label><input placeholder="e.g. Toyota Land Cruiser Prado"></div>
+<div class="formrow"><label>Price (KES)</label><input type="number" placeholder="Price"></div>
+<div class="formrow"><label>Location</label><input placeholder="County / town"></div>
+<div class="formrow"><label>Phone</label><input placeholder="+254 ..."></div>
+<button class="btn green" style="width:100%" onclick="alert('Listing form ready — photo upload and account connection will be added next.')">CONTINUE</button>`;
+}
+if(type==="parts"){
+html=`<h2>Spare parts</h2>
+<p>Search for a part or send an inquiry to Kenyan sellers.</p>
+<div class="formrow"><input placeholder="Part name or part number"></div>
+<div class="formrow"><input placeholder="Vehicle make / model"></div>
+<div class="formrow"><input placeholder="Your location"></div>
+<button class="btn green" style="width:100%">SEARCH PARTS</button>`;
+}
+if(type==="contact"){
+html=`<h2>Contact seller</h2>
+<p>The seller contact and messaging system will appear here.</p>
+<button class="btn green" style="width:100%">SEND MESSAGE</button>`;
+}
+openCustom(html);
+}
+
+function openCustom(html){
+document.getElementById("modalContent").innerHTML=html;
+document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+document.getElementById("modal").addEventListener("click",e=>{
+if(e.target.id==="modal")closeModal();
+});
+
+render();
 </script>
-</body></html>
+
+</body>
+</html>
