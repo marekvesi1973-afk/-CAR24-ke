@@ -1650,7 +1650,334 @@ window.addEventListener("click",function(e){
 
 loadVehicles();
 
-</script>
+/* VEHICLE DETAIL VIEW */
+(function(){
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    .vehicle-detail-overlay{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      z-index:99999;
+      padding:20px 12px;
+      overflow:auto;
+    }
+
+    .vehicle-detail-box{
+      max-width:700px;
+      margin:20px auto;
+      background:#fff;
+      color:#20252b;
+      border-radius:12px;
+      padding:22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .vehicle-detail-box img{
+      width:100%;
+      max-height:420px;
+      object-fit:cover;
+      border-radius:8px;
+      margin-bottom:15px;
+    }
+
+    .vehicle-detail-title{
+      font-size:25px;
+      font-weight:800;
+      margin:0;
+    }
+
+    .vehicle-detail-price{
+      font-size:27px;
+      font-weight:800;
+      margin:10px 0;
+    }
+
+    .vehicle-detail-meta{
+      color:#69727a;
+      margin-bottom:16px;
+    }
+
+    .vehicle-detail-info{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:15px 0;
+    }
+
+    .vehicle-detail-info div{
+      background:#f3f5f7;
+      padding:11px;
+      border-radius:7px;
+    }
+
+    .vehicle-detail-info strong{
+      display:block;
+      font-size:12px;
+      color:#69727a;
+      margin-bottom:4px;
+    }
+
+    .vehicle-detail-description{
+      background:#f3f5f7;
+      padding:12px;
+      border-radius:7px;
+      margin:15px 0;
+      white-space:pre-wrap;
+    }
+
+    .vehicle-detail-contact{
+      width:100%;
+      padding:13px;
+      border:0;
+      border-radius:7px;
+      background:#18a558;
+      color:white;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    @media(max-width:600px){
+      .vehicle-detail-info{
+        grid-template-columns:1fr;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const overlay = document.createElement("div");
+  overlay.className = "vehicle-detail-overlay";
+  overlay.id = "vehicleDetailOverlay";
+
+  overlay.innerHTML = `
+    <div class="vehicle-detail-box">
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2 id="detailVehicleTitle" class="vehicle-detail-title">
+          Vehicle
+        </h2>
+
+        <button
+          id="detailCloseButton"
+          style="border:0;background:none;font-size:30px;cursor:pointer;color:#555">
+          ×
+        </button>
+      </div>
+
+      <img id="detailVehicleImage" src="" alt="Vehicle">
+
+      <div id="detailVehiclePrice" class="vehicle-detail-price"></div>
+
+      <div id="detailVehicleMeta" class="vehicle-detail-meta"></div>
+
+      <div id="detailVehicleInfo" class="vehicle-detail-info"></div>
+
+      <div
+        id="detailVehicleDescription"
+        class="vehicle-detail-description"
+        style="display:none">
+      </div>
+
+      <button
+        id="detailContactButton"
+        class="vehicle-detail-contact">
+        Contact seller
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  function escapeDetailHtml(value){
+    return String(value ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
+
+  function closeVehicleDetail(){
+    overlay.style.display = "none";
+  }
+
+  window.closeVehicleDetail = closeVehicleDetail;
+
+  document
+    .getElementById("detailCloseButton")
+    .addEventListener("click", closeVehicleDetail);
+
+  const vehicleGrid = document.getElementById("vehicleGrid");
+
+  if(vehicleGrid){
+
+    vehicleGrid.addEventListener("click", async function(e){
+
+      const card = e.target.closest(".card");
+
+      if(!card) return;
+
+      const titleElement = card.querySelector(".cardtitle");
+
+      if(!titleElement) return;
+
+      const title = titleElement.textContent.trim();
+
+      const imageElement = card.querySelector("img");
+
+      const imageUrl = imageElement
+        ? imageElement.src
+        : "";
+
+      try{
+
+        const result = await supabaseClient
+          .from("vehicles")
+          .select("*")
+          .eq("title", title)
+          .limit(1)
+          .maybeSingle();
+
+        if(result.error){
+          console.error(result.error);
+          alert("Vehicle details could not be loaded.");
+          return;
+        }
+
+        const vehicle = result.data;
+
+        if(!vehicle){
+          alert("Vehicle details could not be loaded.");
+          return;
+        }
+
+        document.getElementById("detailVehicleTitle")
+          .textContent = vehicle.title || "Vehicle";
+
+        document.getElementById("detailVehicleImage")
+          .src = imageUrl;
+
+        document.getElementById("detailVehiclePrice")
+          .textContent =
+            "KES " +
+            Number(vehicle.price || 0).toLocaleString();
+
+        document.getElementById("detailVehicleMeta")
+          .textContent =
+            [
+              vehicle.location,
+              vehicle.year,
+              vehicle.mileage
+                ? Number(vehicle.mileage).toLocaleString() + " km"
+                : ""
+            ]
+            .filter(Boolean)
+            .join(" · ");
+
+        const info = [
+          ["Make", vehicle.make],
+          ["Model", vehicle.model],
+          ["Year", vehicle.year],
+          [
+            "Mileage",
+            vehicle.mileage
+              ? Number(vehicle.mileage).toLocaleString() + " km"
+              : ""
+          ],
+          ["Fuel", vehicle.fuel_type],
+          ["Transmission", vehicle.transmission],
+          [
+            "Customs paid",
+            vehicle.customs_paid ? "Yes" : "Not specified"
+          ],
+          [
+            "Inspection",
+            vehicle.inspection_done ? "Yes" : "Not specified"
+          ],
+          ["Inspection date", vehicle.inspection_date],
+          ["VIN", vehicle.vin]
+        ];
+
+        document.getElementById("detailVehicleInfo")
+          .innerHTML =
+            info
+              .filter(item =>
+                item[1] !== null &&
+                item[1] !== undefined &&
+                item[1] !== ""
+              )
+              .map(item =>
+                "<div><strong>" +
+                escapeDetailHtml(item[0]) +
+                "</strong>" +
+                escapeDetailHtml(item[1]) +
+                "</div>"
+              )
+              .join("");
+
+        const description =
+          document.getElementById("detailVehicleDescription");
+
+        if(vehicle.description){
+
+          description.textContent =
+            vehicle.description;
+
+          description.style.display = "block";
+
+        }else{
+
+          description.style.display = "none";
+
+        }
+
+        const contactButton =
+          document.getElementById("detailContactButton");
+
+        contactButton.onclick = function(){
+
+          if(vehicle.seller_phone){
+
+            window.location.href =
+              "tel:" + vehicle.seller_phone;
+
+          }else{
+
+            alert("Seller phone number is not available.");
+
+          }
+
+        };
+
+        overlay.style.display = "block";
+
+      }catch(error){
+
+        console.error(error);
+
+        alert("Could not load vehicle details.");
+
+      }
+
+    });
+
+  }
+
+  overlay.addEventListener("click", function(e){
+
+    if(e.target === overlay){
+      closeVehicleDetail();
+    }
+
+  });
+
+})();</script>
 
 </body>
 </html>
