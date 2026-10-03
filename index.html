@@ -561,7 +561,10 @@ label{
             <option>Hyundai</option>
             <option>Kia</option>
             <option value="Other">Other</option>
-          </select>
+          </select><div id="manualMakeBox" style="display:none">
+  <label>Make name</label>
+  <input id="vManualMake" placeholder="Enter make">
+</div>
         </div>
 
         <div>
@@ -1013,6 +1016,20 @@ function makeChanged(){
   const manual =
     document.getElementById("manualModelBox");
 
+  const manualMake =
+    document.getElementById("manualMakeBox");
+
+  if(manualMake){
+
+    manualMake.style.display =
+      make === "Other" ? "block" : "none";
+
+    if(make !== "Other"){
+      document.getElementById("vManualMake").value = "";
+    }
+
+  }
+
   select.innerHTML =
     '<option value="">Select model</option>';
 
@@ -1035,16 +1052,18 @@ function makeChanged(){
     const option =
       document.createElement("option");
 
-    option.value="__OTHER__";
-    option.textContent="Other / enter manually";
+    option.value = "__OTHER__";
+    option.textContent = "Other / enter manually";
 
     select.appendChild(option);
+
   }
 
-  manual.style.display="none";
-  document.getElementById("vManualModel").value="";
-}
+  manual.style.display = "none";
 
+  document.getElementById("vManualModel").value = "";
+
+}
 document.getElementById("vModel").addEventListener("change",function(){
 
   const manual =
@@ -1114,7 +1133,17 @@ document.getElementById("sellForm")
 
   try{
 
-    let model =
+   let make =
+  document.getElementById("vMake").value;
+
+if(make === "Other"){
+  make =
+    document.getElementById("vManualMake").value.trim();
+}
+
+if(!make){
+  throw new Error("Please enter the vehicle make.");
+}                                                                                                                                                                  let model =
       document.getElementById("vModel").value;
 
     if(
