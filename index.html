@@ -1451,7 +1451,8 @@ async function searchVehicles(){
   const text =
     document.getElementById("searchText")
     .value
-    .trim();
+    .trim()
+    .toLowerCase();
 
   const make =
     document.getElementById("searchMake").value;
@@ -1459,7 +1460,8 @@ async function searchVehicles(){
   const location =
     document.getElementById("searchLocation")
     .value
-    .trim();
+    .trim()
+    .toLowerCase();
 
   const from =
     Number(document.getElementById("priceFrom").value) || 0;
@@ -1467,52 +1469,112 @@ async function searchVehicles(){
   const to =
     Number(document.getElementById("priceTo").value) || 0;
 
-  let query =
-    supabaseClient
-    .from("vehicles")
-    .select("*")
-    .eq("status","active")
-    .order("created_at",{ascending:false});
+  if(from && to && from > to){
 
-  if(make)
-    query=query.eq("make",make);
+    alert("Price from cannot be higher than price to.");
+    return;
 
-  if(location)
-    query=query.ilike("location","%"+location+"%");
-
-  if(from)
-    query=query.gte("price",from);
-
-  if(to)
-    query=query.lte("price",to);
-
-  if(text)
-    query=query.or(
-      "title.ilike.%"+text+"%,model.ilike.%"+text+"%,make.ilike.%"+text+"%"
-    );
+  }
 
   const {
     data,
     error
-  }=await query.limit(50);
+  } = await supabaseClient
+    .from("vehicles")
+    .select("*")
+    .eq("status","active")
+    .order("created_at",{ascending:false})
+    .limit(100);
 
   if(error){
-    console.error(error);
+
+    console.error("Search error:",error);
+
+    alert("Search failed. Please try again.");
+
     return;
+
+  }
+
+  let results = data || [];
+
+  if(make){
+
+    results =
+      results.filter(vehicle =>
+        String(vehicle.make || "").toLowerCase() ===
+        make.toLowerCase()
+      );
+
+  }
+
+  if(location){
+
+    results =
+      results.filter(vehicle =>
+        String(vehicle.location || "")
+        .toLowerCase()
+        .includes(location)
+      );
+
+  }
+
+  if(from){
+
+    results =
+      results.filter(vehicle =>
+        Number(vehicle.price || 0) >= from
+      );
+
+  }
+
+  if(to){
+
+    results =
+      results.filter(vehicle =>
+        Number(vehicle.price || 0) <= to
+      );
+
+  }
+
+  if(text){
+
+    results =
+      results.filter(vehicle => {
+
+        const searchable = [
+
+          vehicle.title,
+          vehicle.make,
+          vehicle.model,
+          vehicle.location,
+          vehicle.description,
+          vehicle.fuel,
+          vehicle.transmission
+
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+        return searchable.includes(text);
+
+      });
+
   }
 
   document.getElementById("vehicleSectionTitle")
-    .textContent="Search results";
+    .textContent = "Search results";
 
   const action =
     document.getElementById("vehicleSectionAction");
 
-  action.textContent="Back to latest";
-  action.onclick=loadVehicles;
+  action.textContent = "Back to latest";
+  action.onclick = loadVehicles;
 
-  renderVehicles(data || []);
-}
-  
+  await renderVehicles(results);
+
+}  
 
 
 
