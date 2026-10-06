@@ -1506,7 +1506,7 @@ async function searchVehicles(){
 }
 
 
-function renderVehicles(data){
+async function renderVehicles(data){
 
   const grid =
     document.getElementById("vehicleGrid");
@@ -1521,7 +1521,23 @@ function renderVehicles(data){
     return;
   }
 
-  data.forEach(vehicle=>{
+  for(const vehicle of data){
+
+    let imageUrl =
+      "https://images.unsplash.com/photo-1553440569-bcc63803a83d";
+
+    const {
+      data: images
+    } =
+      await supabaseClient
+      .from("vehicle_images")
+      .select("image_url")
+      .eq("vehicle_id",vehicle.id)
+      .limit(1);
+
+    if(images && images.length && images[0].image_url){
+      imageUrl=images[0].image_url;
+    }
 
     const card =
       document.createElement("div");
@@ -1529,6 +1545,8 @@ function renderVehicles(data){
     card.className="card";
 
     card.innerHTML=`
+
+      <img src="${escapeHtml(imageUrl)}">
 
       <div class="cardbody">
 
@@ -1542,7 +1560,11 @@ function renderVehicles(data){
 
         <div class="meta">
           ${escapeHtml(vehicle.location || "")}
-          ·
+          ${vehicle.year ? " · "+vehicle.year : ""}
+          ${vehicle.mileage ? " · "+Number(vehicle.mileage).toLocaleString()+" km" : ""}
+        </div>
+
+        <div class="meta">
           ${escapeHtml(vehicle.make || "")}
           ${vehicle.model ? " · "+escapeHtml(vehicle.model) : ""}
         </div>
@@ -1552,11 +1574,9 @@ function renderVehicles(data){
 
     grid.appendChild(card);
 
-  });
+  }
 
 }
-
-
 function quickSearch(value){
 
   document.getElementById("searchText").value=value;
