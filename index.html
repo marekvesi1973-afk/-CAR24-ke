@@ -1512,63 +1512,8 @@ async function searchVehicles(){
 
   renderVehicles(data || []);
 }
-async function searchVehicles(){
+  
 
-  const text =
-    document.getElementById("searchText")
-    .value
-    .trim();
-
-  const make =
-    document.getElementById("searchMake").value;
-
-  const location =
-    document.getElementById("searchLocation")
-    .value
-    .trim();
-
-  const from =
-    Number(document.getElementById("priceFrom").value) || 0;
-
-  const to =
-    Number(document.getElementById("priceTo").value) || 0;
-
-  let query =
-    supabaseClient
-    .from("vehicles")
-    .select("*")
-    .eq("status","active")
-    .order("created_at",{ascending:false});
-
-  if(make)
-    query=query.eq("make",make);
-
-  if(location)
-    query=query.ilike("location","%"+location+"%");
-
-  if(from)
-    query=query.gte("price",from);
-
-  if(to)
-    query=query.lte("price",to);
-
-  if(text)
-    query=query.or(
-      "title.ilike.%"+text+"%,model.ilike.%"+text+"%,make.ilike.%"+text+"%"
-    );
-
-  const {
-    data,
-    error
-  }=await query.limit(50);
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  renderVehicles(data || []);
-}
 
 
 async function renderVehicles(data){
