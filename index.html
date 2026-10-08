@@ -1658,22 +1658,23 @@ async function renderVehicles(data){
 }
 function quickSearch(value){
 
-  document.getElementById("searchText").value="";
-
   document.getElementById("priceFrom").value="";
   document.getElementById("priceTo").value="";
 
   if(value==="Under 1M"){
+    document.getElementById("searchText").value="";
     document.getElementById("priceTo").value="1000000";
   }
-
-  if(value==="Under 2M"){
+  else if(value==="Under 2M"){
+    document.getElementById("searchText").value="";
     document.getElementById("priceTo").value="2000000";
+  }
+  else{
+    document.getElementById("searchText").value=value;
   }
 
   searchVehicles();
 }
-
 
 function setCategory(category){
 
