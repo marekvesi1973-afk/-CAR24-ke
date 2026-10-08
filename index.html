@@ -1537,7 +1537,14 @@ async function searchVehicles(){
 
   }
 
-  if(text){
+    if(text === "newer cars"){
+
+    results =
+      results.filter(vehicle =>
+        Number(vehicle.year || 0) >= 2020
+      );
+
+  }else if(text){  
 
     results =
       results.filter(vehicle => {
