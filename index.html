@@ -1544,9 +1544,13 @@ async function searchVehicles(){
         Number(vehicle.year || 0) >= 2020
       );
 
-  }else if(text){  
+  }else if(text === "diesel"){ 
 
-    results =
+   results =
+  results.filter(vehicle =>
+    String(vehicle.fuel_type || "")
+    .toLowerCase() === "diesel"
+  ); results =
       results.filter(vehicle => {
 
         const searchable = [
