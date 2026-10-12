@@ -1552,42 +1552,7 @@ async function searchVehicles(){
 
   }
 
-    if(text === "newer cars"){
-
-    results =
-      results.filter(vehicle =>
-        Number(vehicle.year || 0) >= 2020
-      );
-
-  }else if(text === "diesel"){ 
-
-   results =
-  results.filter(vehicle =>
-    String(vehicle.fuel_type || "")
-    .toLowerCase() === "diesel"
-  ); results =
-      results.filter(vehicle => {
-
-        const searchable = [
-
-          vehicle.title,
-          vehicle.make,
-          vehicle.model,
-          vehicle.location,
-          vehicle.description,
-          vehicle.fuel_type,
-          vehicle.transmission
-
-        ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-        return searchable.includes(text);
-
-      });
-
-  }
+    
 
   document.getElementById("vehicleSectionTitle")
     .textContent = "Search results";
@@ -1604,6 +1569,91 @@ async function searchVehicles(){
 
 
 
+
+async function searchVehicles(){
+
+  const text = document.getElementById("searchText").value.trim().toLowerCase();
+  const make = document.getElementById("searchMake").value;
+  const location = document.getElementById("searchLocation").value.trim().toLowerCase();
+  const from = Number(document.getElementById("priceFrom").value) || 0;
+  const to = Number(document.getElementById("priceTo").value) || 0;
+
+  if(from && to && from > to){
+    alert("Price from cannot be higher than price to.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("vehicles")
+    .select("*")
+    .eq("status","active")
+    .order("created_at",{ascending:false})
+    .limit(100);
+
+  if(error){
+    console.error("Search error:",error);
+    alert("Search failed. Please try again.");
+    return;
+  }
+
+  let results = data || [];
+
+  if(make){
+    results = results.filter(vehicle =>
+      String(vehicle.make || "").toLowerCase() === make.toLowerCase()
+    );
+  }
+
+  if(location){
+    results = results.filter(vehicle =>
+      String(vehicle.location || "").toLowerCase().includes(location)
+    );
+  }
+
+  if(from){
+    results = results.filter(vehicle =>
+      Number(vehicle.price || 0) >= from
+    );
+  }
+
+  if(to){
+    results = results.filter(vehicle =>
+      Number(vehicle.price || 0) <= to
+    );
+  }
+
+  if(text === "newer cars"){
+    results = results.filter(vehicle =>
+      Number(vehicle.year || 0) >= 2020
+    );
+  }else if(text === "diesel"){
+    results = results.filter(vehicle =>
+      String(vehicle.fuel_type || "").toLowerCase() === "diesel"
+    );
+  }else if(text){
+    results = results.filter(vehicle => {
+      const searchable = [
+        vehicle.title,
+        vehicle.make,
+        vehicle.model,
+        vehicle.location,
+        vehicle.description,
+        vehicle.fuel_type,
+        vehicle.transmission
+      ].filter(Boolean).join(" ").toLowerCase();
+
+      return searchable.includes(text);
+    });
+  }
+
+  document.getElementById("vehicleSectionTitle").textContent = "Search results";
+
+  const action = document.getElementById("vehicleSectionAction");
+  action.textContent = "Back to latest";
+  action.onclick = loadVehicles;
+
+  await renderVehicles(results);
+}
 async function renderVehicles(data){
 
   const grid =
