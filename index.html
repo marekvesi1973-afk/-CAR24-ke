@@ -1448,6 +1448,19 @@ async function loadVehicles(){
 /* =========================================================
    SEARCH
    ========================================================= */
+
+function quickLocation(city){
+
+  document.getElementById("searchLocation").value = city;
+  document.getElementById("searchText").value = "";
+  document.getElementById("searchMake").value = "";
+  document.getElementById("priceFrom").value = "";
+  document.getElementById("priceTo").value = "";
+
+  searchVehicles();
+}
+
+
 async function searchVehicles(){
 
   const text =
